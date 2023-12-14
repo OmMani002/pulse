@@ -117,11 +117,26 @@ export default function Home() {
                 <span className="text-sm font-medium text-blue-600">Step 3</span>
                 <span className="text-al font-semibold ">Start asking questions</span>
                 <span className="mt-2 text-zinc-700">
-                  It&apos;s that simple. Try out Phill today - it really takes less than a minute.
+                  It&apos;s that simple. Try out Pulse today - it really takes less than a minute.
                 </span>
               </div>
             </li>
           </ol>
+
+          <div className="mx-auto max-w-6xl px-6 lg:px-6">
+              <div className="mt-16 flow-root sm:mt-24">
+                <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:px-4">
+                  <Image 
+                    src="/file-upload-preview.jpg" 
+                    alt="uploading preview" 
+                    width={1419} 
+                    height={732}
+                    quality={100}
+                    className="rounded-md bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10"
+                  />
+                </div>
+              </div>
+            </div>
       </div>  
     </>
   )
