@@ -1,4 +1,7 @@
 "use client"
+{/* trpc.io/docs/server/adapters/nextjs#route-handlers */}
+
+
 
 import { PropsWithChildren, useState } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"

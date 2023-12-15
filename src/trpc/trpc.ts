@@ -12,5 +12,11 @@ const t = initTRPC.create();
  * that can be used throughout the router
  */
 
+
+/**
+ * publicProcedure means it essentially allows us to create API endpoint that 
+ * anyone whether they are authenticated or not can call. It is also called as 
+ * Public API.
+ */
 export const router = t.router;
 export const publicProcedure = t.procedure;
