@@ -8,13 +8,14 @@ import Dropzone from "react-dropzone"
 import { Cloud, File } from "lucide-react"
 import { Progress } from "./ui/progress"
 import { resolve } from "path"
+import { useUploadThing } from "@/lib/uploadthing"
 
 const UploadDropzone = () => {
 
     const [isUploading, setIsUploading] = useState<boolean>(true)
     const [uploadProgress, setUploadProgress] = useState<number>(0)
 
-    
+    const { startUpload } = useUploadThing("pdfUploader")
 
     {/*made this function to see the uploading state of a file when we upload a pdf */}
     const startSimulatedProgress = () => {
@@ -45,7 +46,11 @@ const UploadDropzone = () => {
                 //generally people use AWS S3 to upload the files easily
                 //using uploadthing.com
                  
+                const res = await startUpload(acceptedFile)
 
+                if(!res) {
+                    
+                }
 
                 clearInterval(progressInterval)
                 setUploadProgress(100)
