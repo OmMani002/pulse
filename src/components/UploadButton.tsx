@@ -14,6 +14,8 @@ const UploadDropzone = () => {
     const [isUploading, setIsUploading] = useState<boolean>(true)
     const [uploadProgress, setUploadProgress] = useState<number>(0)
 
+    
+
     {/*made this function to see the uploading state of a file when we upload a pdf */}
     const startSimulatedProgress = () => {
         setUploadProgress(0)
