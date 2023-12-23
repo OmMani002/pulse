@@ -10,8 +10,12 @@ import { Progress } from "./ui/progress"
 import { resolve } from "path"
 import { useUploadThing } from "@/lib/uploadthing"
 import { useToast } from "./ui/use-toast"
+import { trpc } from "@/app/_trpc/client"
+import { useRouter } from "next/navigation"
 
 const UploadDropzone = () => {
+
+    const router = useRouter()
 
     const [isUploading, setIsUploading] = 
         useState<boolean>(true)
@@ -20,6 +24,14 @@ const UploadDropzone = () => {
     const { toast } = useToast()
 
     const { startUpload } = useUploadThing("pdfUploader")
+
+    const { mutate: startPolling } = trpc.getFile.useMutation({
+        onSuccess: (file) => {
+            router.push(`/dashboard/${file.id}`)
+        },
+        retry: true,
+        retryDelay: 500
+    })
 
     {/*made this function to see the uploading state of a file when we upload a pdf */}
     const startSimulatedProgress = () => {
@@ -72,10 +84,12 @@ const UploadDropzone = () => {
                     })
                 }
 
-                
+
 
                 clearInterval(progressInterval)
                 setUploadProgress(100)
+
+                startPolling({ key })
         }}>
         {({getRootProps, getInputProps, acceptedFiles}) => (
             <div 
@@ -113,6 +127,13 @@ const UploadDropzone = () => {
                                     <Progress value={uploadProgress} className="h-1 w-full bg-zinc-200"/>
                                 </div>
                             ) : null}
+
+                            <input 
+                                {...getInputProps()} 
+                                type="file" 
+                                id="dropzone-file" 
+                                className="hidden"
+                            />
                         </label>
                     </div>
             </div>
