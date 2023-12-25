@@ -6,13 +6,17 @@ import { Document, Page, pdfjs } from "react-pdf"
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import { useToast } from "./ui/use-toast";
-import {useResizeDetector} from 'react-resize-detector'
+import { useResizeDetector } from 'react-resize-detector'
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useState } from "react";
 
-import {useForm} from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { z } from "zod";
+
+import { zodResolver } from '@hookform/resolvers/zod'
+
+ {/**if  a bug arrives at custompagevalidator under resolver: then install npm install zod@3.21.4 */}
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
@@ -35,7 +39,17 @@ const PdfRenderer = ({url}: PdfRendererProps) => {
 
     type TCustomPageValidator = z.infer<typeof CustomPageValidator>
 
-    const {} = useForm({})
+    const {
+        register,
+        handleSubmit,
+        formState: {errors},
+        setValue
+    } = useForm<TCustomPageValidator>({
+        defaultValues: {
+            page: '1'
+        }, 
+        resolver: zodResolver(CustomPageValidator)
+    })
 
     const {width, ref} = useResizeDetector()
 
@@ -57,11 +71,15 @@ const PdfRenderer = ({url}: PdfRendererProps) => {
                     <div className="flex items-center gap-1.5">
                         {/* added a package of shadcn-ui@latest add input here*/}
                         
-                        <Input className="w-12 h-8"/>
-                        <p className="text-zinc-700 text-sm space-x-1">
-                            <span>/</span>
-                            <span>{numPages ?? 'x'}</span>
-                        </p>
+                        <Input 
+                            {...register("page")}
+                            className="w-12 h-8"
+                            
+                        />
+                            <p className="text-zinc-700 text-sm space-x-1">
+                                <span>/</span>
+                                <span>{numPages ?? 'x'}</span>
+                            </p>
                     </div>
                     <Button 
                         disabled= {
