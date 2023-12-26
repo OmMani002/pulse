@@ -1,4 +1,4 @@
-import { pinecone } from './../../../lib/pinecone';
+import { getPineconeClient} from '@/lib/pinecone';
 import { db } from "@/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
@@ -41,8 +41,8 @@ export const ourFileRouter = {
         const pagesAmt = pageLevelDocs.length
         
         //vectorize and index entire document
-
-        const pineconeIndex = pinecone.Index("pulse")
+        const pinecone = await getPineconeClient()
+        const pineconeIndex = pinecone.Index('pulse')
 
         const embeddings = new OpenAIEmbeddings({
           openAIApiKey: process.env.OPENAI_API_KEY
