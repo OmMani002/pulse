@@ -62,7 +62,7 @@ const Message = ({
                     )}>
                         {format(
                             new Date(message.createdAt),
-                            'HH:mm'
+                            "HH:mm"
                         )}
                     </div>
                 ) : null}
