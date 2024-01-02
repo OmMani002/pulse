@@ -100,6 +100,82 @@ export const ChatContextProvider = ({fileId, children}: Props) => {
             }
         },
 
+        onSuccess:async (stream) => {
+            setIsLoading(false)
+
+            if (!stream) {
+                return toast({
+                    title: 'There was a problem sending this message',
+                    description: 'Please refresh this page and try again',
+                    variant: 'destructive'
+                })
+            }
+
+            const reader = stream.getReader()
+            const decoder = new TextDecoder()
+            let done = false
+
+            // accumulated response
+
+            let actResponse = ''
+            while (!done) {
+                const { value, done: doneReading } = await reader.read()
+                done = doneReading
+                const chunkValue = decoder.decode(value)
+
+                actResponse += chunkValue
+
+                // apend chunk to the actual message
+
+                utils.getFileMessages.setInfiniteData(
+                    { fileId, limit: INFINITE_QUERY_LIMIT },
+                    (old) => {
+                        if (!old) return { pages: [], pageParams: [] }
+                        
+                        let isAiResponseCreated = old.pages.some(
+                            (page) => page.messages.some((message) => message.id === 'ai-response')
+                        )
+
+                        let updatedPages = old.pages.map((page) => {
+                            if (page === old.pages[0]) {
+                                let updatedMessages
+
+                                if (!isAiResponseCreated) {
+                                    updatedMessages = [
+                                        {
+                                            createdAt: new Date().toISOString(),
+                                            id: "ai-response",
+                                            text: actResponse,
+                                            isUserMessage: false
+                                        },
+                                        ...page.messages
+                                    ]
+                                } else {
+                                    updatedMessages = page.messages.map((message) => {
+                                        if (message.id === "ai-response") {
+                                            return {
+                                                ...message,
+                                                text: actResponse
+                                            }
+                                        }
+                                        return message
+                                    })
+                                }
+
+                                return {
+                                    ...page,
+                                    messages: updatedMessages
+                                }
+                            }
+                            return page
+                        })
+
+                        return {...old, pages: updatedPages}
+                    }
+                )
+            }
+        },
+
         onError: (_, __, context) => {
             setMessage(backupMessage.current)
             utils.getFileMessages.setData(
