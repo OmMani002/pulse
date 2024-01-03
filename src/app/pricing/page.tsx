@@ -71,7 +71,7 @@ const Page = () => {
                     <h1 className="text-6xl font-bold sm:text-7xl">Pricing</h1>
                     <p className="mt-5 text-gray-600 sm:text-lg">
                         Whether you&apos;re just trying our service
-                        or need more, we&spos;ve got you covered.
+                        or need more, we&apos;ve got you covered.
                     </p>
                 </div>
 
