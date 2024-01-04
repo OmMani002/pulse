@@ -55,7 +55,7 @@ export const appRouter = router({
         })
     }),
 
-    createStripeSession: privateProcedure.query(async ({ctx}) => {
+    createStripeSession: privateProcedure.mutation(async ({ctx}) => {
         const { userId } = ctx
 
         const billingUrl = absoluteUrl("/dashboard/billing")
