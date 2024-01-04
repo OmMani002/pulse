@@ -3,7 +3,10 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { PLANS } from "@/config/stripe"
 import { cn } from "@/lib/utils"
-import { Check, HelpCircle, Minus } from "lucide-react"
+import { ArrowRight, Check, HelpCircle, Minus } from "lucide-react"
+import Link from "next/link"
+import { buttonVariants } from "@/components/ui/button"
+import UpgradeButton from "@/components/UpgradeButton"
 
 const Page = () => {
     const { getUser } = getKindeServerSession()
@@ -78,7 +81,7 @@ const Page = () => {
                 <div className="pt-12 grid grid-cols-1 gap-10 lg:grid-cols-2">
                     <TooltipProvider>
                         {pricingItems.map(
-                            ({ plan, tagline, quota, features }) => {
+                            async ({ plan, tagline, quota, features }) => {
                                 const price =
                                     PLANS.find(
                                         (p) => p.slug === plan.toLowerCase()
@@ -158,7 +161,30 @@ const Page = () => {
                                               </li>
                                             ))}
                                     </ul>
-                                    <div className="" />
+                                    <div className="border-t border-gray-200" />
+                                    <div className="p-5">
+                                      {plan === "Free" ? (
+                                        <Link
+                                          href={await user ? '/dashboard' : '/sign-in'}
+                                          className={buttonVariants({
+                                            className: "w-full",
+                                            variant: "secondary"
+
+                                        })}>
+                                                {await user ? "Sign up"  : "Upgrade now" }
+                                                <ArrowRight className="h-5 w-5 ml-1.5"/>
+                                        </Link>
+                                      ) : await user ? (
+                                        <UpgradeButton />
+                                      ) : (
+                                      <Link href='/sign-in' className={buttonVariants({
+                                        className: "w-full"
+                                      })}>
+                                              {await user ? "Sign up"  : "Upgrade now"}
+                                              <ArrowRight className="h-5 w-5 ml-1.5"/>
+                                      </Link>
+                                      )}
+                                    </div>
                                     </div>
                                 )
                             }
