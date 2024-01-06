@@ -13,11 +13,14 @@ import { PLANS } from "@/config/stripe";
  */
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
-    const { getUser } = getKindeServerSession();
+    const { getUser, isAuthenticated } = getKindeServerSession();
     //const user = await getUser()
     const user = await getUser();
+    const isLoggedIn = await isAuthenticated();
+    console.log("user", user);
 
-    if (!user || !user.id || !user.email) {
+    if (!isLoggedIn || !user) {
+      console.log("failed");
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     console.log(user);
@@ -25,7 +28,7 @@ export const appRouter = router({
     //     throw new TRPCError({ code: "UNAUTHORIZED" });
 
     //check if the user is in the database
-    const dbUser = await db.user.findFirst({
+    const dbUser = await db.user.findUnique({
       where: {
         id: user.id,
       },
@@ -34,11 +37,12 @@ export const appRouter = router({
     console.log(dbUser);
 
     if (!dbUser) {
+      console.log("create user new");
       //create user in db
       await db.user.create({
         data: {
           id: user.id,
-          email: user.email,
+          email: user.email ?? "",
         },
       });
     }
@@ -89,7 +93,7 @@ export const appRouter = router({
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: billingUrl,
       cancel_url: billingUrl,
-      payment_method_types: ["card", "paypal"],
+      payment_method_types: ["card"],
       mode: "subscription",
       billing_address_collection: "auto",
       line_items: [
