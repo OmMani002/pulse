@@ -83,12 +83,8 @@ const UploadDropzone = () => {
                         variant: 'destructive'
                     })
                 }
-
-
-
                 clearInterval(progressInterval)
                 setUploadProgress(100)
-
                 startPolling({ key })
         }}>
         {({getRootProps, getInputProps, acceptedFiles}) => (
