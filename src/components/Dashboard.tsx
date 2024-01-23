@@ -10,13 +10,10 @@ import { Button } from "./ui/button"
 import { useState } from "react"
 
 const Dashboard = () => {
-
     const [currentlyDeletingFile, setCurrentlyDeletingFile] = useState<string | null>(
         null
     )
-
     const utils = trpc.useContext() 
-
     const { data: files, isLoading } = 
         trpc.getUserFiles.useQuery()
 
@@ -32,8 +29,6 @@ const Dashboard = () => {
                 setCurrentlyDeletingFile(null)
             }
         })
-    
-
     return <main className="mx-auto max-w-7xl md:p-10">
         <div className="mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0">
             <h1 className="mb-3 font-bold text-5xl text-gray-900">
@@ -42,8 +37,6 @@ const Dashboard = () => {
             
             <UploadButton />
         </div>
-
-
         {/* display all user files */}
         {files && files?.length !== 0 ? (
             <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
@@ -67,7 +60,6 @@ const Dashboard = () => {
                             </div>
                             </div>
                         </Link>
-
                         <div className="px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500">
                             <div className="flex items-center gap-2">
                                 <Plus className="h-4 w-4"/>
@@ -103,7 +95,6 @@ const Dashboard = () => {
                 <p>Let&apos;s upload your first PDF.</p>
             </div>
         )}
-
     </main>
 }
 
